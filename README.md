@@ -29,3 +29,6 @@ An AI-based Health & Fitness System that uses **Fuzzy Logic** and **Artificial N
 ---
 
 ## 🏗️ Project Structure
+
+## 🌐 Live Demo
+https://healthfit-companion-q0x4.onrender.com
