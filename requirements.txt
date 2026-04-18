@@ -1,0 +1,8 @@
+Flask==2.3.3
+Werkzeug==2.3.7
+reportlab==3.6.12
+scikit-fuzzy
+scipy
+packaging
+networkx
+scikit-learn

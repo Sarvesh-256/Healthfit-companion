@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HealthFit Companion - Health & Wellness Assessment</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="logo-section">
+                <div class="logo">🏥</div>
+                <h1>HealthFit Companion</h1>
+                <p>Your personal health and wellness assessment tool</p>
+            </div>
+        </header>
+
+        <!-- Main Content -->
+        <div id="assessmentForm" class="form-section">
+            <h2>Health Assessment Form</h2>
+            
+            <form id="healthForm">
+                <!-- Basic Information Section -->
+                <div class="form-section-header">Basic Information</div>
+                
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="age">Age (years)</label>
+                        <input type="number" id="age" name="age" min="1" max="120" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="gender">Gender</label>
+                        <select id="gender" name="gender" required>
+                            <option value="">Select Gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="height">Height (cm)</label>
+                        <input type="number" id="height" name="height" min="50" max="300" step="0.1" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="weight">Weight (kg)</label>
+                        <input type="number" id="weight" name="weight" min="20" max="300" step="0.1" required>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label for="activityLevel">Activity Level</label>
+                    <select id="activityLevel" name="activity_level" required>
+                        <option value="">Select Activity Level</option>
+                        <option value="sedentary">Sedentary (little or no exercise)</option>
+                        <option value="light">Light (exercise 1-3 days/week)</option>
+                        <option value="moderate">Moderate (exercise 3-5 days/week)</option>
+                        <option value="active">Active (exercise 6-7 days/week)</option>
+                        <option value="very_active">Very Active (intense exercise daily)</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="goal">Goal</label>
+                    <select id="goal" name="goal" required>
+                        <option value="">Select Goal</option>
+                        <option value="loss">Weight Loss</option>
+                        <option value="maintain">Maintain Weight</option>
+                        <option value="gain">Weight Gain</option>
+                    </select>
+                </div>
+
+                <!-- Mental Health Section -->
+                <div class="form-section-header">Mental Health</div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sleep">Sleep Hours Per Day</label>
+                        <input type="number" id="sleep" name="sleep" min="0" max="24" step="0.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="stress">Stress Level (0-10)</label>
+                        <input type="range" id="stress" name="stress" min="0" max="10" value="5" required>
+                        <span id="stressValue" class="slider-value">5</span>
+                    </div>
+                </div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="mood">Mood Level (0-10)</label>
+                        <input type="range" id="mood" name="mood" min="0" max="10" value="5" required>
+                        <span id="moodValue" class="slider-value">5</span>
+                    </div>
+                    <div class="form-group">
+                        <label for="screen">Screen Time Hours Per Day</label>
+                        <input type="number" id="screen" name="screen" min="0" max="24" step="0.5" required>
+                    </div>
+                </div>
+
+                <!-- Physical Activity Section -->
+                <div class="form-section-header">Physical Activity</div>
+
+                <div class="form-row">
+                    <div class="form-group">
+                        <label for="sedentary">Sedentary Hours Per Day</label>
+                        <input type="number" id="sedentary" name="sedentary" min="0" max="24" step="0.5" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="recovery">Recovery/Sleep Hours Per Day</label>
+                        <input type="number" id="recovery" name="recovery" min="0" max="24" step="0.5" required>
+                    </div>
+                </div>
+
+                <!-- Submit Button -->
+                <button type="submit" class="btn btn-primary">Generate Assessment</button>
+            </form>
+        </div>
+
+        <!-- Loading Spinner -->
+        <div id="loadingSpinner" class="loading-spinner hidden">
+            <div class="spinner"></div>
+            <p>Calculating your assessment...</p>
+        </div>
+
+        <!-- Results Section -->
+        <div id="resultsSection" class="results-section hidden">
+            <button class="btn btn-secondary" id="newAssessmentBtn">← New Assessment</button>
+            
+            <div class="results-grid">
+                <!-- Body Analysis Card -->
+                <div class="result-card">
+                    <h3>📊 Body Analysis</h3>
+                    <div class="metric">
+                        <span class="label">BMI</span>
+                        <span class="value" id="resultBMI">--</span>
+                        <span class="category" id="resultBMICategory">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">BMR (kcal)</span>
+                        <span class="value" id="resultBMR">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">TDEE (kcal)</span>
+                        <span class="value" id="resultTDEE">--</span>
+                    </div>
+                    <div class="metric info-text">
+                        <span id="resultBodyInfo">--</span>
+                    </div>
+                </div>
+
+                <!-- Mental Health Card -->
+                <div class="result-card">
+                    <h3>🧠 Mental Health</h3>
+                    <div class="metric">
+                        <span class="label">Mental Score</span>
+                        <span class="value" id="resultMentalScore">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Status</span>
+                        <span class="value" id="resultMentalStatus">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Sleep: <span id="resultSleep">--</span> hrs</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Stress: <span id="resultStress">--</span>/10</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Screen Time: <span id="resultScreen">--</span> hrs</span>
+                    </div>
+                </div>
+
+                <!-- Fitness Card -->
+                <div class="result-card">
+                    <h3>💪 Fitness Level</h3>
+                    <div class="metric">
+                        <span class="label">Fitness Level</span>
+                        <span class="value" id="resultFitnessLevel">--</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Sedentary: <span id="resultSedentary">--</span> hrs</span>
+                    </div>
+                    <div class="metric">
+                        <span class="label">Recovery: <span id="resultRecovery">--</span> hrs</span>
+                    </div>
+                </div>
+
+                <!-- Wellness Score Card -->
+                <div class="result-card wellness-highlight">
+                    <h3>🌟 Overall Wellness</h3>
+                    <div class="metric">
+                        <span class="label">Wellness Score</span>
+                        <span class="value large" id="resultWellnessScore">--</span>
+                    </div>
+                    <div class="wellness-bar">
+                        <div class="wellness-fill" id="wellnessFill"></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Diet Recommendation Card -->
+            <div class="recommendation-card">
+                <h3>🍽️ Personalized Diet Recommendation</h3>
+                <div id="dietRecommendation" class="recommendation-content">
+                    --
+                </div>
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <button class="btn btn-success" id="saveAssessmentBtn">💾 Save Assessment</button>
+                <button class="btn btn-secondary" id="downloadReportBtn">📥 Download Report</button>
+            </div>
+            <!-- Save log removed: terminal-only logging enabled -->
+        </div>
+
+        <!-- Error Message -->
+        <div id="errorMessage" class="error-message hidden"></div>
+    </div>
+
+    <!-- jsPDF (client-side PDF generation) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- jsPDF AutoTable (optional, used for tables) -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+    <script src="{{ url_for('static', filename='js/script.js') }}"></script>
+</body>
+</html>
