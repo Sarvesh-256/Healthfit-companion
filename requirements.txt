@@ -6,3 +6,6 @@ scipy
 packaging
 networkx
 scikit-learn
+pandas
+numpy
+matplotlib
